@@ -223,11 +223,12 @@ export function generatePizza(options = {}) {
  * This simulates the optional "rate this pizza" interaction.
  *
  * @param {number} stars - Rating from 1-5
+ * @param {number} pizzaId - The ID of the pizza to rate
  * @param {string} [token] - Auth token from createUserAndLogin()
  * @returns {import('k6/http').RefinedResponse}
  */
-export function ratePizza(stars = 5, token = null) {
-  const payload = JSON.stringify({ stars });
+export function ratePizza(stars = 5, pizzaId = 0, token = null) {
+  const payload = JSON.stringify({ stars, pizza_id: pizzaId });
   const headers = token ? authHeaders(token) : JSON_HEADERS;
 
   const res = http.post(`${BASE_URL}${ENDPOINTS.apiRatings}`, payload, headers);

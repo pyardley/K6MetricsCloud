@@ -88,14 +88,24 @@ export default function (data) {
   thinkTime(1, 3);
 
   // --- Step 3: Generate a random pizza --------------------------------------
+  let pizzaId = 0;
   group("02 - Generate Pizza", () => {
-    generatePizza({
+    const res = generatePizza({
       token: token,
       maxCaloriesPerSlice: 1000,
       mustBeVegetarian: Math.random() > 0.7, // 30% chance vegetarian
       maxNumberOfToppings: Math.floor(Math.random() * 5) + 3, // 3-7 toppings
       minNumberOfToppings: 2,
     });
+    // Extract pizza ID for rating
+    try {
+      const body = JSON.parse(res.body);
+      if (body.pizza && body.pizza.id) {
+        pizzaId = body.pizza.id;
+      }
+    } catch {
+      // Ignore parse errors
+    }
     shortPause();
   });
 
@@ -103,10 +113,10 @@ export default function (data) {
   thinkTime(2, 5);
 
   // --- Step 5: Optionally rate the pizza (60% of users do) ------------------
-  if (Math.random() < 0.6) {
+  if (Math.random() < 0.6 && pizzaId > 0) {
     group("03 - Rate Pizza", () => {
       const stars = Math.floor(Math.random() * 5) + 1; // 1-5 stars
-      ratePizza(stars, token);
+      ratePizza(stars, pizzaId, token);
       shortPause();
     });
   }
