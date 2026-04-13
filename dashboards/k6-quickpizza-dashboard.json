@@ -235,9 +235,9 @@
             "uid": "${DS_GRAFANACLOUD_PROM}"
           },
           "editorMode": "code",
-          "expr": "rate(k6_http_reqs_total{}[1m])",
+          "expr": "sum(rate(k6_http_reqs_total{}[1m]))",
           "instant": false,
-          "legendFormat": "req/s",
+          "legendFormat": "Total req/s",
           "range": true,
           "refId": "A"
         }
@@ -307,9 +307,9 @@
             "uid": "${DS_GRAFANACLOUD_PROM}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, rate(k6_http_req_duration_seconds{}[1m])) * 1000",
+          "expr": "histogram_quantile(0.95, sum(rate(k6_http_req_duration_seconds{}[1m])))",
           "instant": false,
-          "legendFormat": "p95",
+          "legendFormat": "Overall p95",
           "range": true,
           "refId": "A"
         }
@@ -379,9 +379,9 @@
             "uid": "${DS_GRAFANACLOUD_PROM}"
           },
           "editorMode": "code",
-          "expr": "k6_http_req_failed_rate{} * 100",
+          "expr": "avg(k6_http_req_failed_rate{}) * 100",
           "instant": false,
-          "legendFormat": "error %",
+          "legendFormat": "Avg Error %",
           "range": true,
           "refId": "A"
         }
