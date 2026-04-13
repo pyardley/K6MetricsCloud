@@ -407,7 +407,7 @@
         "type": "prometheus",
         "uid": "${DS_GRAFANACLOUD_PROM}"
       },
-      "description": "HTTP request duration percentiles (p50, p90, p95, p99) across all endpoints",
+      "description": "Median (p50) HTTP response time broken down by endpoint (Homepage, Pizza API, Ratings API)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -490,9 +490,9 @@
             "uid": "${DS_GRAFANACLOUD_PROM}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.50, rate(k6_http_req_duration_seconds{}[1m])) * 1000",
+          "expr": "histogram_quantile(0.50, rate(k6_http_req_duration_seconds{name=~\".*api/pizza.*\"}[1m])) * 1000",
           "instant": false,
-          "legendFormat": "p50 (median)",
+          "legendFormat": "Pizza API p50",
           "range": true,
           "refId": "A"
         },
@@ -502,10 +502,10 @@
             "uid": "${DS_GRAFANACLOUD_PROM}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.90, rate(k6_http_req_duration_seconds{}[1m])) * 1000",
+          "expr": "histogram_quantile(0.50, rate(k6_http_req_duration_seconds{name=~\".*api/ratings.*\"}[1m])) * 1000",
           "hide": false,
           "instant": false,
-          "legendFormat": "p90",
+          "legendFormat": "Ratings API p50",
           "range": true,
           "refId": "B"
         },
@@ -515,28 +515,15 @@
             "uid": "${DS_GRAFANACLOUD_PROM}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, rate(k6_http_req_duration_seconds{}[1m])) * 1000",
+          "expr": "histogram_quantile(0.50, rate(k6_http_req_duration_seconds{name!~\".*api.*\"}[1m])) * 1000",
           "hide": false,
           "instant": false,
-          "legendFormat": "p95",
+          "legendFormat": "Homepage p50",
           "range": true,
           "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_GRAFANACLOUD_PROM}"
-          },
-          "editorMode": "code",
-          "expr": "histogram_quantile(0.99, rate(k6_http_req_duration_seconds{}[1m])) * 1000",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "p99",
-          "range": true,
-          "refId": "D"
         }
       ],
-      "title": "HTTP Request Duration Percentiles",
+      "title": "Response Time p50 (Median) by Endpoint",
       "type": "timeseries"
     },
     {
